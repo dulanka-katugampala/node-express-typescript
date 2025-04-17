@@ -1,6 +1,6 @@
 import "module-alias/register";
 import { envs } from './core/config/env';
-import { Server, ServerOptions } from './server';
+import { start, ServerOptions } from './server';
 
 const options: ServerOptions = {
     port: envs.PORT,
@@ -8,8 +8,7 @@ const options: ServerOptions = {
 }
 
 async function main(): Promise<void> {
-    const server = new Server(options);
-    void server.start();
+    await start(options);
 }
 
 main();

@@ -12,3 +12,8 @@ export enum HttpCode {
     NOT_FOUND = 404,
     INTERNAL_SERVER_ERROR = 500
 }
+
+export enum Env {
+    DEVELOPMENT = 'development',
+    PRODUCTION = 'production',
+}

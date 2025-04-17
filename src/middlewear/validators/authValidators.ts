@@ -8,4 +8,10 @@ const signupValidator = [
     validationErrorHandler,
 ];
 
-export { signupValidator };
+const signinValidator = [
+    check('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Proper Email is required'),
+    check('password').notEmpty().withMessage('Password is required').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long'),
+    validationErrorHandler,
+];
+
+export { signupValidator,signinValidator };

@@ -16,8 +16,5 @@
     "strictNullChecks": true,
     "skipLibCheck": true,
     "baseUrl": "./src",
-    "paths": {
-      "@core/*": ["core/*"],
-    }
   }
 }

@@ -1,3 +1,5 @@
+import { HttpCode } from "../constants";
+
 export class AppError extends Error {
     constructor(
         public statusCode: number,
@@ -14,24 +16,24 @@ export class AppError extends Error {
 
 export class BadRequestError extends AppError {
     constructor(message: string, errors?: any[]) {
-        super(400, message, errors);
+        super(HttpCode.BAD_REQUEST, message, errors);
     }
 }
 
 export class UnauthorizedError extends AppError {
     constructor(message: string) {
-        super(401, message);
+        super(HttpCode.UNAUTHORIZED, message);
     }
 }
 
 export class ForbiddenError extends AppError {
     constructor(message: string) {
-        super(403, message);
+        super(HttpCode.FORBIDDEN, message);
     }
 }
 
 export class NotFoundError extends AppError {
     constructor(message: string) {
-        super(404, message);
+        super(HttpCode.NOT_FOUND, message);
     }
 }

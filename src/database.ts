@@ -1,5 +1,6 @@
-import { Sequelize } from 'sequelize'; 
+import { Sequelize } from 'sequelize';
 import { envs } from './core/config/env';
+import { Env } from './core/constants';
 
 const sequelize = new Sequelize(envs.DATABASE_URL);
 
@@ -18,6 +19,18 @@ export const connectDB = async (): Promise<Sequelize> => {
         return sequelize;
     } catch (error) {
         console.error('❌ Database connection failed:', error);
+        throw error;
+    }
+};
+
+export const syncDB = async () => {
+    try {
+        if (envs.NODE_ENV === Env.DEVELOPMENT) {
+            await sequelize.sync({ force: false });
+            console.log('🔄 Database synchronized successfully.');
+        }
+    } catch (error) {
+        console.error('❌ Database synchronization failed:', error);
         throw error;
     }
 };
