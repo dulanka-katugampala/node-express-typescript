@@ -1,222 +1,143 @@
-# Node express setup with typescript
+# Node Express TypeScript API
 
-Let’s initialize the project, open a terminal and write this command
+A robust and scalable REST API boilerplate built with Node.js, Express, TypeScript, and Sequelize ORM.
 
-```jsx
-npm init
-```
+## Features
 
-Install development dependencies
+- **TypeScript**: Full type safety across the application
+- **Express**: Fast, unopinionated, minimalist web framework for Node.js
+- **Sequelize ORM**: SQL database integration with PostgreSQL
+- **JWT Authentication**: Secure authentication system with access and refresh tokens
+- **Environment Configuration**: Centralized environment variable management
+- **Error Handling**: Comprehensive error handling system
+- **Rate Limiting**: Protection against brute force attacks
+- **Compression**: Response compression for improved performance
+- **Cookie Parser**: Cookie parsing middleware
+- **Module Aliases**: Clean import paths
 
-```jsx
-npm i -D typescript ts-node-dev @types/node rimraf
-```
-
-Setup typescript configuration
-
-```jsx
-npx tsc -init
-```
-
-Update `tsconfig.json` file with these configurations:
-
-```jsx
-{
-  "exclude": ["node_modules", "dist", "src/**/*.test.ts"],
-  "include": ["src/**/*"],
-  "compilerOptions": {
-    "types": ["node", "express"],
-    "target": "ESNext",
-    "module": "CommonJS",
-    "rootDir": "./src",
-    "moduleResolution": "Node",
-    "typeRoots": ["./node_modules/@types"],
-    "sourceMap": true,
-    "outDir": "dist/",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "skipLibCheck": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@core/*": ["core/*"],
-    }
-  }
-}
-```
-
-We can use a specific version of node for our server, create a new `.nvmrc` file in the root of your project, or you can use this command to generate it.
-
-```jsx
-node -v > .nvmrc
-```
-
-To run the application, we need to set some commands in `package.json`.
-
-```jsx
-{
-  ...
- "scripts": {
-  "dev": "ts-node-dev --respawn --clear --transpile-only --ignore-watch node_modules ./src/app.ts",
-  "build": "rimraf ./dist && tsc",
-  "start": "node dist/app.js",
- },
-  ...
-}
-```
-
-`ts-node-dev`: This is a tool that allows you to run TypeScript files directly in Node.js without the need to compile the code beforehand. It provides additional functionalities for a convenient development environment.
-
-- `-respawn`: This flag instructs `ts-node-dev` to restart the application when changes in source files (like `.ts` files) are detected. It's useful for keeping the application running during development and automatically applying changes made.
-- `-clear`: This flag clears the terminal screen before each restart of the application. It provides a cleaner development experience by removing previous terminal output.
-- `-transpile-only`: This flag tells `ts-node-dev` to only transpile TypeScript code to JavaScript without performing any type checking. This speeds up the transpilation process by skipping type checking during development, which can be useful in large projects where type checking can be a costly operation.
-- `-ignore-watch node_modules`: This flag tells `ts-node-dev` to ignore changes made in the `node_modules` folder. Since changes in this folder typically don't require restarting the application during development, this helps to avoid unnecessary restarts and improves performance.
-
-**Environment variables**
-
-```jsx
-npm i dotenv env-var
-```
-
-Let’s create two files `.env` and `.env.template` in the root of the project, in the `.env` file we can define these variables
+## Project Structure
 
 ```
-PORT=3000
-DEFAULT_API_PREFIX=/api/v1
-NODE_ENV=development
+src/
+├── app.ts                  # Application entry point
+├── server.ts               # Express server configuration
+├── database.ts             # Database connection setup
+├── controllers/            # Request handlers
+├── core/                   # Core application components
+│   ├── classes/            # Error classes and utilities
+│   ├── config/             # Configuration files
+│   └── constants/          # Application constants
+├── middlewear/             # Express middlewares
+├── models/                 # Sequelize models
+├── repos/                  # Data access layer
+├── router/                 # Express routes
+├── services/               # Business logic
+└── utils/                  # Utility functions
 ```
 
-**ESLint**
+## Prerequisites
 
-```jsx
-npm i -D eslint
+- Node.js (v14 or higher)
+- PostgreSQL
+- npm or yarn
+
+## Installation
+
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd node-express-typescript
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Create a `.env` file in the root directory with the following variables (see `.env.template`):
+   ```
+   NODE_ENV=development
+   PORT=3000
+   DEFAULT_API_PREFIX=/api/v1
+   JWT_ACCESS_SECRET=your-access-token-secret
+   JWT_REFRESH_SECRET=your-refresh-token-secret
+   ACCESS_TOKEN_EXPIRES_IN=15m
+   REFRESH_TOKEN_EXPIRES_IN=7d
+   DATABASE_URL=postgres://username:password@localhost:5432/database_name
+   ```
+
+## Development
+
+Start the development server with hot-reload:
+
+```
+npm run dev
 ```
 
-Initialize ESLint config with this command
+## Production
 
-```jsx
-npx eslint --init
-```
+1. Build the application:
+   ```
+   npm run build
+   ```
 
-Update `.eslintrc.json` file with these configurations:
+2. Start the production server:
+   ```
+   npm start
+   ```
 
-```jsx
-{
- "env": {
-  "es2021": true,
-  "node": true
- },
- "extends": [
-  "standard-with-typescript",
-  "plugin:prettier/recommended",
-  "eslint:recommended",
-  "plugin:@typescript-eslint/recommended"
- ],
- "plugins": ["@typescript-eslint", "import", "prettier"],
- "parserOptions": {
-  "ecmaVersion": "latest",
-  "sourceType": "module",
-  "project": "./tsconfig.json"
- },
- "ignorePatterns": ["src/**/*.test.ts"],
- "rules": {
-  "prettier/prettier": "error",
-  "camelcase": "error",
-  "spaced-comment": "error",
-  "quotes": ["error", "single"],
-  "no-duplicate-imports": "error",
-  "no-unused-vars": "off",
-  "no-magic-numbers": "off",
-  "@typescript-eslint/no-unused-vars": "error",
-  "@typescript-eslint/explicit-function-return-type": "error",
-  "@typescript-eslint/strict-boolean-expressions": "off",
-  "@typescript-eslint/no-extraneous-class": "off",
-  "@typescript-eslint/no-magic-numbers": "error"
- }
-}
-```
+## API Endpoints
 
-Create `.eslintignore` file with this content
+### Authentication
 
-```jsx
-node_modules/
-dist/
-jest.config.ts
-```
+- `POST /api/v1/auth/register` - Register a new user
+- `POST /api/v1/auth/login` - Login with existing user credentials
+- `POST /api/v1/auth/refresh` - Refresh access token
+- `POST /api/v1/auth/logout` - Logout and invalidate tokens
 
-**Prettier**
+## Database Models
 
-```jsx
-npm i -D prettier eslint-plugin-prettier eslint-config-prettier
-```
+### User
+- `id`: UUID (Primary Key)
+- `name`: String
+- `email`: String (Unique)
+- `password`: String (Hashed)
+- `status`: Enum ('active', 'inactive')
 
-Create `.prettierrc` file with this content
+### TokenStorage
+- For storing refresh tokens and managing sessions
 
-```jsx
-{
-  "arrowParens": "always",
-  "bracketSpacing": true,
-  "insertPragma": false,
-  "printWidth": 120,
-  "proseWrap": "preserve",
-  "quoteProps": "as-needed",
-  "requirePragma": false,
-  "semi": true,
-  "singleQuote": true,
-  "tabWidth": 2,
-  "trailingComma": "none",
-  "useTabs": true,
-  "endOfLine": "auto",
-  "overrides": [
-    {
-      "files": ".prettierrc",
-      "options": { "parser": "typescript" }
-    }
-  ]
-}
-```
+## Error Handling
 
-Create `.prettierignore` file with this content
+The application implements a centralized error handling system with custom error classes for different types of errors.
 
-```jsx
-.yarn
-dist
-node_modules
-.prettierrc
-```
+## Dependencies
 
-**Path aliases with TypeScript in Node.js**
+### Core Dependencies
+- express
+- sequelize
+- pg (PostgreSQL client)
+- jsonwebtoken
+- bcrypt
+- dotenv
+- env-var
+- compression
+- cookie-parser
+- express-rate-limit
+- express-validator
+- module-alias
 
-Update tsconfig.json
+### Development Dependencies
+- typescript
+- ts-node-dev
+- eslint
+- @types/* (Type definitions)
+- rimraf
 
-```jsx
-{
-  "baseUrl": "./src",
-  "paths": {
-    "@modules/*": ["rest/modules/*"],
-    "@services/*": ["services/*"]
-  }
-}
-```
+## License
 
-Install module-alias package
+ISC
 
-```jsx
-npm i --save module-alias
-```
+---
 
-This module registers the path aliases in the compiled JS files. Therefor we need to make some changes to our package.json
-
-```jsx
-"_moduleAliases": {
-    "@modules": "dist/rest/modules",
-    "@services": "dist/services"
-}
-```
-
-Add the following line at the top of your startup file
-
-```jsx
-import "module-alias/register"
-```
+This project was created as a boilerplate for Node.js REST APIs with TypeScript and PostgreSQL.
